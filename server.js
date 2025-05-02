@@ -158,4 +158,9 @@ app.delete("/tasks", authenticate, (req, res) => {
   res.json({ message: "All your tasks have been deleted." });
 });
 
+// Add a route for the root URL
+app.get("/", (req, res) => {
+  res.send("Welcome to my server!");
+});
+
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
