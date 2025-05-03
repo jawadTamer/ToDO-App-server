@@ -43,13 +43,15 @@ const validateRegistration = (req, res, next) => {
 };
 
 const validateTask = (req, res, next) => {
-  const { title, content, category, priority, tags } = req.body;
+  const { title, content, category, priority, tags, status, date } = req.body;
   let errors = {};
   if (!title) errors.title = "Title is required";
   if (!content) errors.content = "Content is required";
   if (!category) errors.category = "Category is required";
   if (!priority) errors.priority = "Priority is required";
   if (!tags) errors.tags = "Tags are required";
+  if (!status) errors.status = "Status is required";
+  if (!date) errors.date = "Date is required";
 
   if (Object.keys(errors).length > 0) {
     return res.status(400).json({ errors });
@@ -119,7 +121,7 @@ app.get("/tasks/:id", authenticate, (req, res) => {
 });
 
 app.post("/tasks", authenticate, validateTask, (req, res) => {
-  const { title, content, category, priority, tags } = req.body;
+  const { title, content, category, priority, tags, status, date } = req.body;
   const tasks = readData("tasks.json");
   const newTask = {
     id: Date.now(),
@@ -129,6 +131,8 @@ app.post("/tasks", authenticate, validateTask, (req, res) => {
     category,
     priority,
     tags,
+    status: status || "pending", // Default status if not provided
+    date: date || new Date().toISOString(), // Default to current date if not provided
   };
   tasks.push(newTask);
   writeData("tasks.json", tasks);
