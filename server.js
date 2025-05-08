@@ -162,6 +162,14 @@ app.delete("/tasks", authenticate, (req, res) => {
   res.json({ message: "All your tasks have been deleted." });
 });
 
+// Add debug endpoints to view all tasks and users
+app.get('/debug/tasks', (req, res) => {
+  res.json(readData('tasks.json'));
+});
+app.get('/debug/users', (req, res) => {
+  res.json(readData('users.json'));
+});
+
 // Add a route for the root URL
 app.get("/", (req, res) => {
   res.send("Welcome to my server!");
