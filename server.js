@@ -162,6 +162,21 @@ app.delete("/tasks", authenticate, (req, res) => {
   res.json({ message: "All your tasks have been deleted." });
 });
 
+// Delete user account
+app.delete("/delete-account", authenticate, (req, res) => {
+  // Remove user from users.json
+  let users = readData("users.json");
+  users = users.filter((u) => u.email !== req.user.email);
+  writeData("users.json", users);
+
+  // Remove all tasks for this user
+  let tasks = readData("tasks.json");
+  tasks = tasks.filter((task) => task.email !== req.user.email);
+  writeData("tasks.json", tasks);
+
+  res.json({ message: "Account and all associated tasks deleted." });
+});
+
 // Add debug endpoints to view all tasks and users
 app.get('/debug/tasks', (req, res) => {
   res.json(readData('tasks.json'));
