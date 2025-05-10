@@ -67,7 +67,8 @@ const authenticate = (req, res, next) => {
   }
   const token = authHeader.split(" ")[1];
   try {
-    req.user = jwt.verify(token, SECRET_KEY);
+    const decoded = jwt.verify(token, SECRET_KEY);
+    req.user = decoded; // Attach decoded payload (should contain email)
     next();
   } catch (err) {
     return res.status(401).json({ message: "Invalid token" });
@@ -164,6 +165,8 @@ app.delete("/tasks", authenticate, (req, res) => {
 
 // Delete user account
 app.delete("/delete-account", authenticate, (req, res) => {
+  console.log("Authenticated user:", req.user); // Debug
+
   // Remove user from users.json
   let users = readData("users.json");
   users = users.filter((u) => u.email !== req.user.email);
