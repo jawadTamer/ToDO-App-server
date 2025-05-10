@@ -165,7 +165,9 @@ app.delete("/tasks", authenticate, (req, res) => {
 
 // Delete user account
 app.delete("/delete-account", authenticate, (req, res) => {
-  console.log("Authenticated user:", req.user); // Debug
+  if (!req.user || !req.user.email) {
+    return res.status(400).json({ message: "Invalid user. Cannot delete account." });
+  }
 
   // Remove user from users.json
   let users = readData("users.json");
